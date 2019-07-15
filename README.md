@@ -2,3 +2,7 @@
 image-to-image translation from image to ink wash painting
 
 ChipGAN + styleloss
+
+result:
+
+![Alt text](https://github.com/Sky24H/image2ink/blob/master/image.png)
