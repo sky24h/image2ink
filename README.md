@@ -1,5 +1,5 @@
 # image2ink
-image-to-image translation from image to ink wash painting
+image-to-image translation from real photo to ink wash painting
 
 ChipGAN + styleloss
 
