@@ -5,12 +5,9 @@ ChipGAN + styleloss
 
 **requirements**
 
-torch==0.3.1
-
-torchvision==0.2.0
-
 python 2.7
 
+requirements.txt
 
 **Usage:**
 
