@@ -1,0 +1,6 @@
+torch==0.3.1
+torchvision==0.2.0
+scikit-image
+dominate
+pillow
+visdom==0.1.6

@@ -18,7 +18,7 @@ max_dataset_size: inf
 model: cycle_gan
 nThreads: 2
 n_layers_D: 3
-name: horse2_cyclegan_edge_10_dec_150
+name: inkwash
 ndf: 64
 ngf: 64
 no_dropout: True
