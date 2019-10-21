@@ -3,6 +3,14 @@ image-to-image translation from real photo to ink wash painting
 
 ChipGAN + styleloss
 
-result:
+Usage:prepare your own images of landscape and "bash test_ink.sh"
+
+
+
+
+
+
+
+example of result:
 
 ![Alt text](https://github.com/Sky24H/image2ink/blob/master/example.png)
