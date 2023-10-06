@@ -1,11 +1,11 @@
 # image2ink
 Image-to-image translation from real photo to ink wash painting.
 
-Updated to be runnable on Python 3.9, for both training and inferencing.
+Updated to be runnable on Python 3.6 ~ 3.9, for both training and inferencing.
 
 # Requirements:
 
-- Python >= 3.9
+- Python >= 3.6
 
 pip install -r requirements.txt
 
