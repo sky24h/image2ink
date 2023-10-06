@@ -15,7 +15,7 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 # ~~~~~~
-from model import Hed
+from .model import Hed
 
 def no_sigmoid_cross_entropy(sig_logits, label):
     # print(sig_logits)
@@ -84,7 +84,7 @@ class CycleGANModel(BaseModel):
             # ~~~~~~
             self.hed_model = Hed()
             self.hed_model.cuda()
-            save_path = './35.pth'
+            save_path = './checkpoints/pretrained_hed.pth'
             self.hed_model.load_state_dict(torch.load(save_path))
             for param in self.hed_model.parameters():
                 param.requires_grad = False
@@ -138,8 +138,8 @@ class CycleGANModel(BaseModel):
         input_A = input['A' if AtoB else 'B']
         input_B = input['B' if AtoB else 'A']
         if len(self.gpu_ids) > 0:
-            input_A = input_A.cuda(self.gpu_ids[0], async=True)
-            input_B = input_B.cuda(self.gpu_ids[0], async=True)
+            input_A = input_A.cuda(self.gpu_ids[0])#, async=True)
+            input_B = input_B.cuda(self.gpu_ids[0])#, async=True)
         self.input_A = input_A
         self.input_B = input_B
         self.image_paths = input['A_paths' if AtoB else 'B_paths']
@@ -149,7 +149,7 @@ class CycleGANModel(BaseModel):
         self.real_B = Variable(self.input_B)
 
         kernel_size = 5
-        pad_size = kernel_size/2
+        pad_size = kernel_size//2
         p1d = (pad_size,pad_size,pad_size,pad_size)
         p_real_B = F.pad(self.real_B,p1d,"constant",1)
         erode_real_B = -1*(F.max_pool2d(-1*p_real_B,kernel_size,1))
@@ -194,17 +194,17 @@ class CycleGANModel(BaseModel):
     def backward_D_A(self):
         fake_B = self.fake_B_pool.query(self.fake_B)
         loss_D_A = self.backward_D_basic(self.netD_A, self.real_B, fake_B)
-        self.loss_D_A = loss_D_A.data[0]
+        self.loss_D_A = loss_D_A.item()
 
     def backward_D_B(self):
         fake_A = self.fake_A_pool.query(self.fake_A)
         loss_D_B = self.backward_D_basic(self.netD_B, self.real_A, fake_A)
-        self.loss_D_B = loss_D_B.data[0]
+        self.loss_D_B = loss_D_B.item()
 
     def backward_D_ink(self):
         ink_fake_B = self.ink_fake_B_pool.query(self.ink_fake_B)
         loss_D_ink = self.backward_D_basic(self.netD_ink, self.ink_real_B, ink_fake_B)
-        self.loss_D_ink = loss_D_ink.data[0]
+        self.loss_D_ink = loss_D_ink.item()
 
     def backward_G(self, lambda_sup):
         lambda_idt = self.opt.identity
@@ -222,8 +222,8 @@ class CycleGANModel(BaseModel):
 
             self.idt_A = idt_A.data
             self.idt_B = idt_B.data
-            self.loss_idt_A = loss_idt_A.data[0]
-            self.loss_idt_B = loss_idt_B.data[0]
+            self.loss_idt_A = loss_idt_A.item()
+            self.loss_idt_B = loss_idt_B.item()
         else:
             loss_idt_A = 0
             loss_idt_B = 0
@@ -243,7 +243,7 @@ class CycleGANModel(BaseModel):
 
 
         kernel_size = 5
-        pad_size = kernel_size/2
+        pad_size = kernel_size//2
         p1d = (pad_size, pad_size, pad_size, pad_size)
         p_fake_B = F.pad(fake_B, p1d, "constant", 1)
         erode_fake_B = -1*(F.max_pool2d(-1*p_fake_B, kernel_size, 1))
@@ -283,12 +283,12 @@ class CycleGANModel(BaseModel):
         self.edge_fake_B = edge_fake_B.data
         self.ink_fake_B = ink_fake_B.data
 
-        self.loss_G_A = loss_G_A.data[0]
-        self.loss_G_B = loss_G_B.data[0]
-        self.loss_G_ink = loss_G_ink.data[0]
-        self.loss_cycle_A = loss_cycle_A.data[0]
-        self.loss_cycle_B = loss_cycle_B.data[0]
-        self.loss_edge_1 = loss_edge_1.data[0]
+        self.loss_G_A = loss_G_A.item()
+        self.loss_G_B = loss_G_B.item()
+        self.loss_G_ink = loss_G_ink.item()
+        self.loss_cycle_A = loss_cycle_A.item()
+        self.loss_cycle_B = loss_cycle_B.item()
+        self.loss_edge_1 = loss_edge_1.item()
 
     def optimize_parameters(self, lambda_sup):
         # forward
